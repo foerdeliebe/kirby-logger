@@ -31,7 +31,7 @@ class Logger
         if (static::$connection !== null) {
             return static::$connection;
         }
-        $logDir = kirby()->root('logs') . '/kirby3-logger/';
+        $logDir = kirby()->root('logs') . '/logger/';
         $schema = F::read(__DIR__ . '/../logs-schema.sql');
 
         Dir::make($logDir, true);
@@ -126,7 +126,18 @@ class Logger
             ->all()
             ->data();
 
-        return array_map(function ($result) {
+        return array_map(function ($result) use ($field) {
+            if ($field === 'user') {
+                $name = kirby()->user(current($result)) 
+                    ? kirby()->user(current($result))->name()->value() 
+                    : current($result);
+
+                return [
+                    'value' => current($result),
+                    'text' => $name,
+                ];
+            }
+
             return [
                 'value' => current($result),
                 'text' => current($result),
@@ -156,8 +167,8 @@ class Logger
         $log = new Log([
             'type' => $event->type(),
             'action' => $event->action(),
-            'user' => kirby()->user()->email(),
-            'language' => kirby()->languageCode(),
+            'user' => kirby()->user() ? kirby()->user()->email() : 'anonymous',
+            'language' => kirby()->languageCode() ?: '',
         ]);
         $type = $event->type();
         $action = $event->action();
