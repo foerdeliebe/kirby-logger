@@ -2,5 +2,11 @@
   "scripts": {
     "dev": "npx -y kirbyup src/index.js --watch",
     "build": "npx -y kirbyup src/index.js"
+  },
+  "dependencies": {
+    "v-code-diff": "^1.8.0"
+  },
+  "devDependencies": {
+    "kirbyup": "latest"
   }
 }
