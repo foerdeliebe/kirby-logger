@@ -1,6 +1,6 @@
 {
-  "name": "michnhokn/kirby3-logger",
-  "description": "Add a logger to your Kirby3 website",
+  "name": "foerdeliebe/kirby-logger",
+  "description": "Add a logger to your Kirby website",
   "type": "kirby-plugin",
   "version": "0.9.0",
   "license": "MIT",
@@ -12,8 +12,9 @@
   ],
   "keywords": [
     "kirby3",
-    "kirby3-cms",
-    "kirby3-plugin",
+    "kirby4",
+    "kirby-cms",
+    "kirby-plugin",
     "logger",
     "website-log",
     "user-log",
