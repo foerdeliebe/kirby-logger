@@ -8,8 +8,14 @@
             <td>{{ log.slug }}</td>
             <td>{{ log.language }}</td>
             <td>
-                <k-button-group layout="collapsed">
+                <k-button-group layout="collapsed" v-if="log.oldData != '' && log.newData != '-'">
                     <k-button variant="filled" :icon="toggleIcon" v-on:click="toggleActive()">
+                        {{ toggleLabel }}
+                    </k-button>
+                </k-button-group>
+
+                <k-button-group v-else>
+                    <k-button variant="filled" :icon="toggleIcon" disabled>
                         {{ toggleLabel }}
                     </k-button>
                 </k-button-group>
@@ -24,6 +30,7 @@
                 language="json"
                 context="3"
                 trim="true"
+                v-if="log.oldData != '' && log.newData != '-'"
             />
             </td>
         </tr>

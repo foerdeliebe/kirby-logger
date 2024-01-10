@@ -12,6 +12,7 @@ use Kirby\Filesystem\F;
 class Logger
 {
     const TYPES = ['file', 'page', 'user', 'site', 'languages'];
+    const ACTIONS = ['render'];
 
     /**
      * The singleton Database object
@@ -61,11 +62,11 @@ class Logger
         if (!empty($filter['timestamp'])) {
             $query->where("timestamp >= '{$filter['timestamp']}'");
         }
-        if (!empty($filter['oldSearch'])) {
-            $query->where("oldData LIKE '%{$filter['oldSearch']}%'");
+        if (!empty($filter['searchData'])) {
+            $query->where("oldData LIKE '%{$filter['searchData']}%'");
         }
-        if (!empty($filter['newSearch'])) {
-            $query->where("newData LIKE '%{$filter['newSearch']}%'");
+        if (!empty($filter['searchData'])) {
+            $query->where("newData LIKE '%{$filter['searchData']}%'");
         }
         if (!empty($filter['slug'])) {
             $query->where("slug LIKE '%{$filter['slug']}%'");
@@ -87,7 +88,7 @@ class Logger
 
         $total = $totalQuery->count();
         /** @var Collection $result */
-        $result = $query->page($page, $limit);
+        $result = $query->order('timestamp DESC')->page($page, $limit);
 
         return [
             'logs' => $result ? array_values($result->toArray()) : [],
@@ -238,6 +239,12 @@ class Logger
                         $log->setOldData($event->originalPage()->toArray());
                         $log->setNewData($event->duplicatePage()->toArray());
 
+                        return $log;
+                    case 'render':
+                        $log->setSlug($event->page()->id());
+                        $log->setOldData();
+                        $log->setNewData('-');
+                        
                         return $log;
                     case 'update':
                         $log->setSlug($event->newPage()->id());

@@ -6,13 +6,7 @@
         <k-button icon="refresh" @click="reset">{{ $t('michnhokn.logger.reset') }}</k-button>
       </k-button-group>
       <template slot="right">
-        <k-pagination
-            align="right"
-            :details="true"
-            :page="page"
-            :limit="limit"
-            :total="total"
-            @paginate="paginate"/>
+        
       </template>
     </k-header>
 
@@ -59,17 +53,10 @@
                       placeholder="Suche ..."
                       icon="search"/>
       </k-column>
-      <k-column width="1/3">
-        <k-text-field v-model="filter.oldSearch"
+      <k-column width="2/3">
+        <k-text-field v-model="filter.searchData"
                       type="text"
-                      :label="$t('michnhokn.logger.searchOld')"
-                      :placeholder="$t('search')"
-                      icon="search"/>
-      </k-column>
-      <k-column width="1/3">
-        <k-text-field v-model="filter.newSearch"
-                      type="text"
-                      :label="$t('michnhokn.logger.searchNew')"
+                      :label="$t('michnhokn.logger.searchData')"
                       :placeholder="$t('search')"
                       icon="search"/>
       </k-column>
@@ -91,6 +78,13 @@
               <LoggerAreaRow :log="log" :key="log.id"/>
             </template>
           </table>
+          <k-pagination
+            class="k-table-pagination"
+            :details="true"
+            :page="page"
+            :limit="limit"
+            :total="total"
+            @paginate="paginate"/>
         </div>
         <k-empty v-else icon="table" layout="cards">{{ $t('michnhokn.logger.empty') }}</k-empty>
       </k-column>
@@ -110,11 +104,10 @@ export default {
       logs: [],
       total: 0,
       page: 1,
-      limit: 10,
+      limit: 20,
       filter: {
         timestamp: '',
-        oldSearch: '',
-        newSearch: '',
+        searchData: '',
         action: '',
         type: '',
         user: '',

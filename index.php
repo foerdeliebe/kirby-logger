@@ -12,9 +12,8 @@
             'michnhokn.logger.action' => 'Action',
             'michnhokn.logger.slug' => 'Slug',
             'michnhokn.logger.old' => 'Old data',
-            'michnhokn.logger.searchOld' => 'Search old data',
+            'michnhokn.logger.searchData' => 'Search data',
             'michnhokn.logger.new' => 'New data',
-            'michnhokn.logger.searchNew' => 'Search new data',
             'michnhokn.logger.empty' => 'No log entries yet',
         ],
         'de' => [
@@ -25,9 +24,8 @@
             'michnhokn.logger.action' => 'Aktion',
             'michnhokn.logger.slug' => 'Slug',
             'michnhokn.logger.old' => 'Alte Daten',
-            'michnhokn.logger.searchOld' => 'Alte Daten durchsuchen',
+            'michnhokn.logger.searchData' => 'Daten durchsuchen',
             'michnhokn.logger.new' => 'Neue Daten',
-            'michnhokn.logger.searchNew' => 'Neue Daten durchsuchen',
             'michnhokn.logger.empty' => 'Bisher keine Log Einträge',
         ],
     ],
@@ -47,7 +45,7 @@
                 'action' => function () {
                     return \Michnhokn\Logger::logs(
                         $this->requestBody('page', 1),
-                        $this->requestBody('limit', 10),
+                        $this->requestBody('limit', 20),
                         $this->requestBody('filter', [])
                     );
                 },
