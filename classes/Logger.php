@@ -11,9 +11,6 @@ use Kirby\Filesystem\F;
 
 class Logger
 {
-    const TYPES = ['file', 'page', 'user', 'site', 'languages'];
-    const ACTIONS = ['render'];
-
     /**
      * The singleton Database object
      *
@@ -151,7 +148,11 @@ class Logger
      */
     public static function log(Event $event): void
     {
-        if (!in_array($event->type(), self::TYPES)) {
+        if (in_array($event->type(), kirby()->option('michnhokn.logger.block.types'))) {
+            return;
+        }
+
+        if (in_array($event->action(), kirby()->option('michnhokn.logger.block.actions'))) {
             return;
         }
 

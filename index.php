@@ -3,6 +3,12 @@
 @include_once __DIR__ . '/vendor/autoload.php';
 
 \Kirby\Cms\App::plugin('michnhokn/logger', [
+    'options' => [
+        'block' => [
+            'actions' => ['render'],
+            'types' => ['system', 'panel'],
+        ]
+    ],
     'translations' => [
         'en' => [
             'michnhokn.logger.title' => 'Logger',

@@ -8,16 +8,27 @@
             <td>{{ log.slug }}</td>
             <td>{{ log.language }}</td>
             <td>
-                <k-button-group layout="collapsed" v-if="log.oldData != '' && log.newData != '-'">
-                    <k-button variant="filled" :icon="toggleIcon" v-on:click="toggleActive()">
+                <k-button-group layout="collapsed">
+                    <k-button 
+                        variant="filled" 
+                        :icon="toggleIcon" 
+                        v-on:click="toggleActive()" 
+                        v-if="log.oldData != '' && log.newData != '-'"
+                    >
                         {{ toggleLabel }}
+                    </k-button>
+                    <k-button 
+                        variant="filled" 
+                        icon="user" 
+                        :link="`${baseUrl}/panel/users/${log.slug}`" 
+                        v-if="log.type === 'user'"
+                    >
+                        {{ showUserLabel }}
                     </k-button>
                 </k-button-group>
 
-                <k-button-group v-else>
-                    <k-button variant="filled" :icon="toggleIcon" disabled>
-                        {{ toggleLabel }}
-                    </k-button>
+                <k-button-group >
+                    
                 </k-button-group>
             </td>
         </tr>
@@ -45,7 +56,9 @@ export default {
         return {
             isActive: false,
             toggleLabel: 'Show diff',
-            toggleIcon: 'add'
+            toggleIcon: 'add',
+            showUserLabel: 'Show user',
+            baseUrl: window.panel.urls.site,
         }
     },
     methods: {
