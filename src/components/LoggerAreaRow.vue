@@ -33,11 +33,14 @@
                                 component: 'k-text-dialog',
                                 props: {
                                     size: 'huge',
-                                    submitButton: 'Rollback',
-                                    onsubmit: rollback,
                                     text: `<pre>${log.oldData}</pre><br />Are you sure you want to rollback this change?`,
                                 },
-                                submit: rollback(log.id)
+                                on: {
+                                    submit: () => {
+                                        rollback(log.id);
+                                        $panel.dialog.close();
+                                    }
+                                }
                             });
                         "
                         v-if="log.type === 'page'"
@@ -91,7 +94,8 @@ export default {
         },
         rollback(id = 1) {
             return this.$api.post('rollback', {id}).then((data) => {
-                this.log = data;
+                //window.panel.$notify('Rollback successful');
+                window.panel.notification.success('Rollback successful');
             });
         }
     }
