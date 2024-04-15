@@ -39,7 +39,7 @@
                         type="select"
                         icon="angle-down"/>
       </k-column>
-      <k-column width="1/6">
+      <k-column width="1/7">
         <k-select-field v-model="filter.language"
                         :options="languageOptions"
                         :label="$t('language')"

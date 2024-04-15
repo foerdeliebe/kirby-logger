@@ -25,10 +25,25 @@
                     >
                         {{ showUserLabel }}
                     </k-button>
-                </k-button-group>
-
-                <k-button-group >
-                    
+                    <k-button
+                        variant="filled"
+                        icon="undo"
+                        @click="
+                            $panel.dialog.open({
+                                component: 'k-text-dialog',
+                                props: {
+                                    size: 'huge',
+                                    submitButton: 'Rollback',
+                                    onsubmit: rollback,
+                                    text: `<pre>${log.oldData}</pre><br />Are you sure you want to rollback this change?`,
+                                },
+                                submit: rollback(log.id)
+                            });
+                        "
+                        v-if="log.type === 'page'"
+                    >
+                        {{ rollbackLabel }}
+                    </k-button>
                 </k-button-group>
             </td>
         </tr>
@@ -58,6 +73,7 @@ export default {
             toggleLabel: 'Show diff',
             toggleIcon: 'add',
             showUserLabel: 'Show user',
+            rollbackLabel: 'Rollback',
             baseUrl: window.panel.urls.site,
         }
     },
@@ -72,6 +88,11 @@ export default {
                 this.toggleLabel = 'Show diff';
                 this.toggleIcon = 'add';
             }
+        },
+        rollback(id = 1) {
+            return this.$api.post('rollback', {id}).then((data) => {
+                this.log = data;
+            });
         }
     }
 }

@@ -56,6 +56,15 @@
                     );
                 },
             ],
+            [
+                'pattern' => 'rollback',
+                'method' => 'POST',
+                'action' => function () {
+                    return \Michnhokn\Logger::rollback(
+                        $this->requestBody('id'),
+                    );
+                },
+            ]
         ],
     ],
     'areas' => [

@@ -8,6 +8,7 @@ use Kirby\Cms\Event;
 use Kirby\Database\Database;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\Str;
 
 class Logger
 {
@@ -249,8 +250,31 @@ class Logger
                         return $log;
                     case 'update':
                         $log->setSlug($event->newPage()->id());
-                        $log->setOldData($event->oldPage()->content()->toArray());
-                        $log->setNewData($event->newPage()->content()->toArray());
+
+                        $oldData = $event->oldPage()->content()->toArray();
+                        $newData = $event->newPage()->content()->toArray();
+                        $oldChangedData = [];
+                        $newChangedData = [];
+
+                        foreach ($oldData as $key => $value) {
+                            if ($value !== $newData[$key]) {
+                                // check if only difference is the string '/n'
+                                if (str_replace("\n", '', $value) === str_replace("\n", '', $newData[$key])) {
+                                    continue;
+                                }
+
+                                // check if $value is a block
+                                if (Str::startsWith($value, '[') && Str::endsWith($value, ']')) {
+                                    $oldChangedData[$key] = json_decode($value);
+                                    $newChangedData[$key] = json_decode($newData[$key]);
+                                    continue;
+                                }
+                                $oldChangedData[$key] = $value;
+                                $newChangedData[$key] = $newData[$key];
+                            }
+                        }
+                        $log->setOldData($oldChangedData);
+                        $log->setNewData($newChangedData);
 
                         return $log;
                 }
@@ -361,5 +385,24 @@ class Logger
         $log->setNewData('-');
 
         return $log;
+    }
+
+    public static function rollback(int $id) {
+        $entry = self::connect()->table('logs')->find($id)->toArray();
+        
+        if ($entry) {
+            $oldData = json_decode($entry['oldData'], true);
+            $page = kirby()->page($entry['slug']);
+
+            if ($page && $page->exists() && $page->isWritable()) {
+                $page->update($oldData);
+
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
