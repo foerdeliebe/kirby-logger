@@ -52,15 +52,15 @@
         </tr>
         <tr v-if="isActive">
             <td colspan="7">
-            <code-diff
-                :old-string="log.oldData"
-                :new-string="log.newData"
-                output-format="side-by-side"
-                language="json"
-                context="3"
-                trim="true"
-                v-if="log.oldData != '' && log.newData != '-'"
-            />
+                <code-diff
+                    :old-string="formatJson(log.oldData)"
+                    :new-string="formatJson(log.newData)"
+                    output-format="side-by-side"
+                    language="json"
+                    :context="1"
+                    :trim="true"
+                    v-if="log.oldData != '' && log.newData != '-'"
+                />
             </td>
         </tr>
     </tbody>
@@ -94,9 +94,11 @@ export default {
         },
         rollback(id = 1) {
             return this.$api.post('rollback', {id}).then((data) => {
-                //window.panel.$notify('Rollback successful');
                 window.panel.notification.success('Rollback successful');
             });
+        },
+        formatJson(json) {
+            return JSON.stringify(JSON.parse(json), null, 2);
         }
     }
 }
