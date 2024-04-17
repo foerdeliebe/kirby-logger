@@ -32,8 +32,8 @@
                             $panel.dialog.open({
                                 component: 'k-text-dialog',
                                 props: {
-                                    size: 'huge',
-                                    text: `<pre>${log.oldData}</pre><br />Are you sure you want to rollback this change?`,
+                                    text: rollbackTextSummary(),
+                                    confirmLabel: 'Rollback',
                                 },
                                 on: {
                                     submit: () => {
@@ -43,7 +43,7 @@
                                 }
                             });
                         "
-                        v-if="log.type === 'page'"
+                        v-if="log.type === 'page' && log.oldData != log.newData"
                     >
                         {{ rollbackLabel }}
                     </k-button>
@@ -52,21 +52,31 @@
         </tr>
         <tr v-if="isActive">
             <td colspan="7">
-                <code-diff
-                    :old-string="formatJson(log.oldData)"
-                    :new-string="formatJson(log.newData)"
-                    output-format="side-by-side"
-                    language="json"
-                    :context="1"
-                    :trim="true"
-                    v-if="log.oldData != '' && log.newData != '-'"
-                />
+                <template v-if="log.oldData != log.newData">
+                    <code-diff
+                        :old-string="formatJson(log.oldData)"
+                        :new-string="formatJson(log.newData)"
+                        output-format="side-by-side"
+                        language="json"
+                        :context="1"
+                        :trim="true"
+                        v-if="log.oldData != '' && log.newData != '-'"
+                    />
+                </template>
+                <div style="padding: 16px 0" v-else>
+                    <k-box
+                        theme="notice"
+                        text="No changes made"
+                    />
+                </div>
             </td>
         </tr>
     </tbody>
 </template>
 
 <script>
+import CodeDiff from 'v-code-diff'
+
 export default {
     name: 'LoggerAreaRow',
     props: ['log'],
@@ -99,6 +109,12 @@ export default {
         },
         formatJson(json) {
             return JSON.stringify(JSON.parse(json), null, 2);
+        },
+        rollbackTextSummary() {
+            const fields = Object.keys(JSON.parse(this.log.oldData));
+            return `Do you want to rollback this change?<br/ >
+            Fields: <strong>${fields}</strong><br />
+            From: ${this.log.timestamp}`
         }
     }
 }
